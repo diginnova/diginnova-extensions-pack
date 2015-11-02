@@ -1,1 +1,0 @@
-# diginnova-extensions-pack
