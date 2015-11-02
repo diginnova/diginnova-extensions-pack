@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" method="upgrade" type="plugin" group="system">
+	<name>System - Cloudflare Universal SSL</name>
+	<author>Mike Feng Jinglong</author>
+	<creationDate>May 2014</creationDate>
+	<copyright>Copyright (C) 2011 - 2014 http://www.simbunch.com Mike Feng Jinglong</copyright>
+	<license>GNU General Public License, version 3 (http://www.gnu.org/licenses/gpl-3.0.html)</license>
+	<authorEmail>mike@simbunch.com</authorEmail>
+	<authorUrl>www.simbunch.com</authorUrl>
+	<version>1.0.0</version>
+	<description>Plugin for Joomla! to work with Cloudflare's Universal SSL. View setup instructions on https://www.simbunch.com/products/free-extensions/cloudflare-for-joomla</description>
+	<files>
+		<filename plugin="cloudflareunissl_system">cloudflareunissl_system.php</filename>
+		<filename>index.html</filename>
+	</files>
+</extension>
