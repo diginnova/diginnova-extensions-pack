@@ -75,7 +75,14 @@ class  plgSystemHelix3 extends JPlugin
             $doc->addStyleSheet($plg_path.'/assets/css/font-awesome.min.css');
             $doc->addScript($plg_path.'/assets/js/post-formats.js');
 
-            JForm::addFormPath(JPATH_PLUGINS.'/system/helix3/params');
+            $tpl_path = JPATH_ROOT . '/templates/' . $this->getTemplateName();
+
+            if(JFile::exists( $tpl_path . '/post-formats.xml' )) {
+                JForm::addFormPath($tpl_path);
+            } else {
+                JForm::addFormPath(JPATH_PLUGINS . '/system/helix3/params');
+            }
+
             $form->loadFile('post-formats', false);
         }
 
@@ -117,4 +124,64 @@ class  plgSystemHelix3 extends JPlugin
         }
     }
 
+    public function onAfterRoute()
+    {
+        $japps = JFactory::getApplication();
+
+        if ( $japps->isAdmin() )
+        {
+            $user = JFactory::getUser();
+
+            if( !in_array( 8, $user->groups ) ){
+                return false;
+            }
+
+            $inputs = JFactory::getApplication()->input;
+
+            $option         = $inputs->get ( 'option', '' );
+            $id             = $inputs->get ( 'id', '0', 'INT' );
+            $helix3task     = $inputs->get ( 'helix3task' ,'' );
+
+            if ( strtolower( $option ) == 'com_templates' && $id && $helix3task == "export" )
+            {
+               $db = JFactory::getDbo();
+               $query = $db->getQuery(true);
+
+               $query
+                    ->select( '*' )
+                    ->from( $db->quoteName( '#__template_styles' ) )
+                    ->where( $db->quoteName( 'id' ) . ' = ' . $db->quote( $id ) . ' AND ' . $db->quoteName( 'client_id' ) . ' = 0' );
+
+                $db->setQuery( $query );
+
+                $result = $db->loadObject();
+
+                header( 'Content-Description: File Transfer' );
+                header( 'Content-type: application/txt' );
+                header( 'Content-Disposition: attachment; filename="' . $result->template . '_settings_' . date( 'd-m-Y' ) . '.json"' );
+                header( 'Content-Transfer-Encoding: binary' );
+                header( 'Expires: 0' );
+                header( 'Cache-Control: must-revalidate' );
+                header( 'Pragma: public' );
+
+                echo $result->params;
+
+                exit;
+            }
+        }
+        
+    }
+
+    private function getTemplateName()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName(array('template')));
+        $query->from($db->quoteName('#__template_styles'));
+        $query->where($db->quoteName('client_id') . ' = 0');
+        $query->where($db->quoteName('home') . ' = 1');
+        $db->setQuery($query);
+
+        return $db->loadObject()->template;
+    }
 }

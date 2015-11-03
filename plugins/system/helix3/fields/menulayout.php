@@ -44,7 +44,7 @@ function getModuleNameId($id = 'all')
     $db = JFactory::getDBO();
     
     if ($id == 'all') {
-        $query = 'SELECT id, title FROM `#__modules` WHERE client_id = 0';
+        $query = 'SELECT id, title FROM `#__modules` WHERE ( `published` !=-2 AND `published` !=0 ) AND client_id = 0';
     } else {
         $query = 'SELECT id, title FROM `#__modules` WHERE ( `published` !=-2 AND `published` !=0 ) AND id = ' . $id;
     }
@@ -216,8 +216,13 @@ if($count > 4 && $count != 6)
                                         foreach ($modArray as $mod_id)
                                         {
                                             $modules = getModuleNameId($mod_id);
+
+                                            if ($modules) {
                                             $module = $modules[0];
-                                            ?><div class='draggable-module' data-mod_id="<?php echo $module->id; ?>"><?php echo $module->title; ?><i class="fa fa-remove"></i><i class="fa fa-arrows"></i></div><?php
+                                    ?>
+                                            <div class='draggable-module' data-mod_id="<?php echo $module->id; ?>"><?php echo $module->title; ?><i class="fa fa-remove"></i><i class="fa fa-arrows"></i></div>
+                                    <?php
+                                            }
                                         }
                                     }?></div>
 

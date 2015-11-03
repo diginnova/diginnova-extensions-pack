@@ -24,10 +24,19 @@ class SpTypeMedia
 			$src = '';
 		}
 
+		// Depend
+		$depend_data = '';
+		if(isset($attr['depends'])) {
+			$depends = $attr['depends'];
+			foreach ($depends as $selector => $value) {
+				$depend_data .= ' data-group_parent="' . $selector . '" data-depend="' . $value . '"';
+			}
+		}
+
 		JHtml::_('behavior.modal');
 		JHtml::_('jquery.framework');
 		
-		$output  = '<div class="form-group">';
+		$output  = '<div class="form-group"' . $depend_data . '>';
 		$output .= '<label>' . $attr['title'] . '</label>';
 		$output .= '<div class="media">';
 
